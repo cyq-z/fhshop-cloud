@@ -37,7 +37,7 @@ public class MemberController extends GetMemberInfo {
     @Autowired
     private HttpServletRequest request;
 
-    
+
     @PostMapping(value = "/member/login")
     @ApiOperation( "会员登录")
     @ApiImplicitParams({
@@ -45,12 +45,12 @@ public class MemberController extends GetMemberInfo {
             @ApiImplicitParam(name = "password",value = "密码",dataType = "java.lang.String",required = true)
     })
     /**
-     * @Description: 方法是
+     * @Description:
      * @param: memberName
     password
-     * @return: com.fh.shop.common.ServerResponse
+     * @return: {@link ServerResponse}
      * @auther: cyq
-     * @date: 2021/06/09 22:50
+     * @date: 2021/06/10 15:18
      */
     public ServerResponse login(String memberName, String password) {
         return memberService.login(memberName, password);
@@ -60,11 +60,11 @@ public class MemberController extends GetMemberInfo {
     @ApiOperation("会员登录成功之后返回会员的信息")
     @ApiImplicitParam(name = "x-auth",value = "头信息",required = true,paramType = "header")
     /**
-     * @Description: 方法是
-     * @param: 
-     * @return: com.fh.shop.common.ServerResponse
+     * @Description:
+     * @param:
+     * @return: {@link ServerResponse}
      * @auther: cyq
-     * @date: 2021/06/09 22:50
+     * @date: 2021/06/10 15:18
      */
     public ServerResponse findMember()  {
         MemberVo memberVo = buildMemberVo(request);
@@ -83,13 +83,13 @@ public class MemberController extends GetMemberInfo {
     //注销
     @GetMapping(value = "/member/logout")
     @ApiOperation( "会员注销")
-    /**
-     * @Description: 方法是
-     * @param: 
-     * @return: com.fh.shop.common.ServerResponse
-     * @auther: cyq
-     * @date: 2021/06/09 22:50
-     */
+   /**
+    * @Description:
+    * @param:
+    * @return: {@link ServerResponse}
+    * @auther: cyq
+    * @date: 2021/06/10 15:18
+    */
     public ServerResponse logout()  {
         MemberVo memberVo = buildMemberVo(request);
         RedisUtil.del(KeyUtil.buildMemberKey(memberVo.getId()));

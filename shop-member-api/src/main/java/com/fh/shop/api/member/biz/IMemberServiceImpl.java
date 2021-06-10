@@ -32,6 +32,7 @@ public class IMemberServiceImpl implements IMemberService {
     @Resource
     private IMemberMapper memberMapper;
 
+
     @Override
     public ServerResponse login(String memberName, String password) {
         //非空判断
