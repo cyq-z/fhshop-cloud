@@ -1,0 +1,12 @@
+server:
+  port: 9200
+service-url:
+  shop-goods-api: http://localhost:8083
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: path_route #路由的ID
+          uri: ${service-url.shop-goods-api}/api/spu/newProduct #匹配后路由地址
+          predicates: # 断言，路径相匹配的进行路由
+            - Path=/api/spu/newProduct

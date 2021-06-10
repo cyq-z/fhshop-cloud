@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册页面</title>
+    <link rel="stylesheet" href="../js/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../js/shop/css/webbase.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/shop/css/pages-JD-index.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/shop/css/widget-jquery.autocomplete.css"/>
+    <link rel="stylesheet" type="text/css" href="../js/shop/css/widget-cartPanelView.css"/>
+    <title>注册页面</title>
+</head>
+<body>
+<!--列表-->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">会员注册</h3>
+                </div>
+                <div class="bg-danger" id="errorDiv"></div>
+                <div class="panel-body">
+                    <form class="form-horizontal" id="serach_from">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">会员名:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="memberName"
+                                       onblur="checkMemberName(this.value)" placeholder="请输入会员名">
+                                <div id="memberNameTip">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">昵称:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="nickName" placeholder="请输入昵称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邮箱:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="email" placeholder="请输入邮箱"
+                                       onblur="checkMail(this.value)">
+                                <div id="mailTip">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">手机号:</label>
+                            <div class="col-sm-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="phone" placeholder="请输入手机号"
+                                           onblur="checkPhone(this.value)">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="codeButton"
+                                                onclick="sendCode()">点击发送验证码</button>
+                                    </span>
+                                </div>
+                                <div id="phoneTip">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">验证码:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="code" placeholder="请输入验证码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">密码:</label>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control" id="password" placeholder="请输入密码">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">确认密码:</label>
+                            <div class="col-sm-4">
+                                <input type="password" class="form-control" id="confirmPassword" placeholder="请确认密码">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success" id="regButton" onclick="reg();">提交</button>
+                        <button type="reset" class="btn btn-danger">重置</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/jquery-3.3.1.js"></script>
+<script src="../js/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/shop/js/pages/index.js"></script>
+<script src="../js/common.js"></script>
+<script>
+    var v_error = {};
+
+    function checkMemberName(memberName) {
+        $.ajax({
+            type: "post",
+            data: {"memberName": memberName},
+            url: server_url + "/member/checkMemberName",
+            success: function (res) {
+                if (res.code == 200) {
+                    $("#memberNameTip").html("<span style='color: green'><b>用户名可以使用</b></span>")
+                    // $("#regButton").removeAttr("disabled","disabled");
+                    delete v_error["memberName"];
+                } else {
+                    $("#memberNameTip").html("<span style='color: red'><b>" + res.msg + "</b></span>")
+                    // $("#regButton").attr("disabled","disabled");
+                    v_error["memberName"] = res.msg;
+                }
+                check();
+            }
+        })
+    }
+
+    function checkMail(mail) {
+        $.ajax({
+            type: "post",
+            data: {"mail": mail},
+            url: server_url + "/member/checkMail",
+            success: function (res) {
+                if (res.code == 200) {
+                    $("#mailTip").html("<span style='color: green'><b>邮箱可以使用</b></span>")
+                    // $("#regButton").removeAttr("disabled","disabled");
+                    delete v_error["mail"];
+                } else {
+                    $("#mailTip").html("<span style='color: red'><b>" + res.msg + "</b></span>")
+                    // $("#regButton").attr("disabled","disabled");
+                    v_error["mail"] = res.msg;
+                }
+                check();
+            }
+        })
+    }
+
+    function checkPhone(phone) {
+        $.ajax({
+            type: "post",
+            data: {"phone": phone},
+            url: server_url + "/member/checkPhone",
+            success: function (res) {
+                if (res.code == 200) {
+                    $("#phoneTip").html("<span style='color: green'><b>手机号可以使用</b></span>")
+                    // $("#regButton").removeAttr("disabled","disabled");
+                    delete v_error["phone"];
+                } else {
+                    $("#phoneTip").html("<span style='color: red'><b>" + res.msg + "</b></span>")
+                    // $("#regButton").attr("disabled","disabled");
+                    v_error["phone"] = res.msg;
+                }
+                check();
+            }
+        })
+    }
+
+    function count() {
+        v_count--;
+        if (v_count == 0) {
+            //还原
+            $("#codeButton").html("发送验证码");
+            $("#codeButton").removeAttr("disabled", "disabled");
+            v_count = 6;
+            return;
+        }
+        $("#codeButton").html(v_count + "秒后重发");
+        setTimeout(function () {
+            count();
+        }, 1000);
+    }
+
+    var v_count = 6;
+
+    function sendCode() {
+        if (v_error["phone"]) {
+            return;
+        }
+        var phone = $("#phone").val();
+        if (phone.length == 0) {
+            v_error["phone"] = "<span style='color: red'><b>手机号为空</b></span>";
+            $("#phoneTip").html("<span style='color: red'><b>手机号为空</b></span>")
+            check();
+            return;
+        }
+        count();
+        $("#codeButton").attr("disabled", "disabled");
+        $.ajax({
+            type: "post",
+            data: {"phone": phone},
+            url: server_url + "/sms/sendCode",
+            success: function (res) {
+                if (res.code == 200) {
+                    alert(res.msg);
+                    return true;
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+    }
+
+    function check() {
+        var v_resArr = [];
+        for (let x in v_error) {
+            v_resArr.push(v_error[x])
+        }
+        if (v_resArr.length > 0) {
+            $("#regButton").attr("disabled", "disabled");
+            var v_html = "";
+            for (let t of v_resArr) {
+                v_html += "<li style='color: red'>" + t + "</li>";
+            }
+            $("#errorDiv").html(v_html)
+        } else {
+            $("#regButton").removeAttr("disabled");
+            $("#errorDiv").html("")
+        }
+
+    }
+
+    function reg() {
+        var v_param = {};
+        v_param.memberName = $("#memberName").val();
+        v_param.nickName = $("#nickName").val();
+        v_param.password = $("#password").val();
+        v_param.confirmPassword = $("#confirmPassword").val();
+        v_param.mail = $("#email").val();
+        v_param.phone = $("#phone").val();
+        v_param.code = $("#code").val();
+        if (v_param.memberName == "" || v_param.nickName == ""
+            || v_param.password == ""
+            || v_param.confirmPassword == ""
+            || v_param.mail == ""
+            || v_param.phone == ""
+            || v_param.code == ""
+        ) {
+            alert("会员信息不能为空");
+            return false;
+        }
+        var phone = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
+        if (!phone.test(v_param.phone)) {
+            return alert("请输入正确的手机号")
+        }
+        //密码
+        var passwordValue = v_param.password;
+        if (!(/^(\w){3,10}$/.test(passwordValue))) {
+            alert("密码只能输入3-10个字母、数字、下划线");
+            return false;
+        }
+        var passwordValues = $("#password").val();
+        var confirmPasswordValue = $("#confirmPassword").val();
+        if (passwordValues != confirmPasswordValue) {
+            alert("两次输入密码不一致");
+            return false;
+        }
+        var emailValue = v_param.mail;
+        if (!(/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(emailValue))) {
+            alert("请输入规范的邮箱");
+            return false;
+        }
+        $.ajax({
+            type: "post",
+            url: server_url + "/member/reg",
+            data: v_param,
+            success: function (res) {
+                if (res.code == 200) {
+                    location.href = "index.html";
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+    }
+
+
+</script>
+</body>
+</html>
