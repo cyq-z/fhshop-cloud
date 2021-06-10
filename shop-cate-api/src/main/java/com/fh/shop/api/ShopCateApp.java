@@ -4,6 +4,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author love
+ */
 @SpringBootApplication
 @MapperScan("com.fh.shop.api.cate.mapper")
 public class ShopCateApp {

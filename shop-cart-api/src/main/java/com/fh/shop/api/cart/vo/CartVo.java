@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author love
+ */
 @Data
 public class CartVo implements Serializable {
 
