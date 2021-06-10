@@ -32,32 +32,31 @@ public class IMemberServiceImpl implements IMemberService {
     @Resource
     private IMemberMapper memberMapper;
 
-
     @Override
     public ServerResponse login(String memberName, String password) {
         //非空判断
-        if (StringUtils.isEmpty(memberName) || StringUtils.isEmpty(password)){
+        if (StringUtils.isEmpty(memberName) || StringUtils.isEmpty(password)) {
             return ServerResponse.error(ResponseEnum.MEMBER_LOGIN_INFO_IS_NULL);
 
         }
         //获取数据库信息 验证用户是否存在
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<>();
-        memberQueryWrapper.eq("memberName",memberName);
+        memberQueryWrapper.eq("memberName", memberName);
         Member memberDB = memberMapper.selectOne(memberQueryWrapper);
-        if (memberDB==null){
-            return ServerResponse.error(ResponseEnum. MEMBER_LOGIN_MEMBER_NAME_IS_EXIST);
+        if (memberDB == null) {
+            return ServerResponse.error(ResponseEnum.MEMBER_LOGIN_MEMBER_NAME_IS_EXIST);
         }
         //判断用户是否激活，
-        if (memberDB.getStatus()==0){
+        if (memberDB.getStatus() == 0) {
             Long id = memberDB.getId();
             String mail = memberDB.getMail();
-            Map<String,String> result = new HashMap<>();
-            result.put("id",id+"");
-            result.put("mail",mail);
-            return ServerResponse.error(ResponseEnum. MEMBER_STATUS_ERROR,result);
+            Map<String, String> result = new HashMap<>();
+            result.put("id", id + "");
+            result.put("mail", mail);
+            return ServerResponse.error(ResponseEnum.MEMBER_STATUS_ERROR, result);
         }
         //对比密码是否正确
-        if (!Md5Util.md5(password).equals(memberDB.getPassword())){
+        if (!Md5Util.md5(password).equals(memberDB.getPassword())) {
             return ServerResponse.error(ResponseEnum.MEMBER_LOGIN_PASSWORD_IS_ERROR);
         }
         //==========生成标签 返回到客户端
@@ -74,11 +73,10 @@ public class IMemberServiceImpl implements IMemberService {
         String memberVoJsonBase64 = Base64.getEncoder().encodeToString(memberVoJson.getBytes());
         String signBase64 = Base64.getEncoder().encodeToString(sign.getBytes());
         //信息往redis里面存一份
-        RedisUtil.setex(KeyUtil.buildMemberKey(id),"",Constants.EXISTS_TIME);
+        RedisUtil.setex(KeyUtil.buildMemberKey(id), "", Constants.EXISTS_TIME);
         //==========生成标签 返回到客户端
-        return ServerResponse.success(memberVoJsonBase64+"."+signBase64);
+        return ServerResponse.success(memberVoJsonBase64 + "." + signBase64);
     }
-
 
 
 }
