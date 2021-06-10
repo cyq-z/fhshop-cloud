@@ -12,6 +12,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ShopGateWayCloudApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(ShopGateWayCloudApp.class,args);
+        SpringApplication.run(ShopGateWayCloudApp.class, args);
     }
 }
